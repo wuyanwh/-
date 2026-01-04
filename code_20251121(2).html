@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《东京物语》家庭情感伦理分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        #chart-container {
+            width: 100%;
+            height: 500px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+
+    <script>
+        // 初始化ECharts实例（兼容容器加载延迟）
+        const initChart = () => {
+            const chartDom = document.getElementById('chart-container');
+            if (!chartDom) return setTimeout(initChart, 100);
+            const myChart = echarts.init(chartDom);
+
+            const option = {
+                title: {
+                    text: '《东京物语》家庭情感伦理关系分析',
+                    subtext: '基于剧本的情感温度与连接强度可视化',
+                    left: 'center',
+                    textStyle: { fontSize: 18, fontWeight: 'bold' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    formatter: (params) => {
+                        let result = params[0].name + '<br/>';
+                        params.forEach(param => {
+                            const { seriesName, value, marker } = param;
+                            let interpretation = '';
+                            if (seriesName === '情感温度') {
+                                interpretation = value >= 8 ? '（深厚情感连接）' : value >= 5 ? '（温和但疏离）' : '（情感隔阂明显）';
+                            } else {
+                                interpretation = value >= 8 ? '（强义务连接）' : value >= 5 ? '（形式化责任）' : '（连接脆弱）';
+                            }
+                            result += `${marker} ${seriesName}: ${value} ${interpretation}<br/>`;
+                        });
+                        return result;
+                    }
+                },
+                legend: { data: ['情感温度', '连接强度'], top: 40 },
+                grid: { left: '3%', right: '4%', bottom: '8%', top: '20%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    data: ['父-子', '父-女', '母-子', '母-女', '老夫妇-纪子（媳）', '老夫妇-昌二（亡子）'],
+                    axisLabel: { interval: 0, rotate: 30, fontSize: 12 }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '关系强度指数',
+                    min: 0,
+                    max: 10,
+                    axisLine: { show: true },
+                    splitLine: { show: true }
+                },
+                series: [
+                    {
+                        name: '情感温度',
+                        type: 'line',
+                        data: [3.5, 4.5, 5.5, 4, 9, 10],
+                        lineStyle: { color: '#e74c3c', width: 3 },
+                        itemStyle: { color: '#e74c3c' },
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        smooth: true,
+                        markPoint: { data: [{ type: 'max', name: '最高情感' }, { type: 'min', name: '最低情感' }] }
+                    },
+                    {
+                        name: '连接强度',
+                        type: 'bar',
+                        data: [3.5, 3, 4, 3.5, 8, 10],
+                        itemStyle: { color: '#3498db', opacity: 0.7 },
+                        barWidth: '40%',
+                        markLine: { data: [{ type: 'average', name: '平均连接强度' }] }
+                    }
+                ],
+                graphic: [{
+                    type: 'text',
+                    left: 'center',
+                    bottom: '2%',
+                    style: { text: '● "伦理-情感落差"：传统家庭中制度性责任压抑了真实情感表达', fontSize: 12, fill: '#7f8c8d' }
+                }]
+            };
+
+            myChart.setOption(option);
+            window.addEventListener('resize', () => myChart.resize());
+        };
+
+        // 页面加载完成后初始化图表
+        window.addEventListener('load', initChart);
+    </script>
+</body>
+</html>

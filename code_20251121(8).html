@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《东京物语》家庭情感伦理深度分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; font-family: 'Microsoft YaHei', Arial, sans-serif; }
+        #chart-container {
+            width: 100%;
+            height: 700px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+
+    <script>
+        // 初始化图表（兼容加载延迟）
+        const initChart = () => {
+            const chartDom = document.getElementById('chart-container');
+            if (!chartDom) return setTimeout(initChart, 100);
+            const myChart = echarts.init(chartDom);
+
+            // 基于剧本分析的关键词数据
+            const relationshipKeywords = {
+                '父-子': {
+                    positive: ['责任', '期待', '传统'],
+                    negative: ['忙碌', '推脱', '经济压力', '缺乏沟通', '城市生活'],
+                    explanation: '长子幸一忙于工作，将父母视为负担，体现现代都市子女的无奈'
+                },
+                '父-女': {
+                    positive: ['亲情', '血缘'],
+                    negative: ['吝啬', '嫌弃', '自私', '美容院生意'],
+                    explanation: '女儿志夏经营美容院，吝啬且嫌弃父母打扰，反映物质主义对亲情的侵蚀'
+                },
+                '母-子': {
+                    positive: ['牵挂', '母爱'],
+                    negative: ['疏远', '冷漠', '少回家', '情感隔阂'],
+                    explanation: '母亲对儿子的思念与现实中的疏远形成强烈对比'
+                },
+                '母-女': {
+                    positive: ['照顾', '家庭'],
+                    negative: ['抱怨', '不耐烦', '负担感', '表面应付'],
+                    explanation: '女儿对母亲的照顾流于形式，缺乏真诚的情感交流'
+                },
+                '老夫妇-纪子（媳）': {
+                    positive: ['真诚', '尊重', '怀念', '温暖', '深夜交谈'],
+                    negative: ['愧疚'],
+                    explanation: '寡妇纪子展现超越血缘的真情，成为电影中的情感绿洲'
+                },
+                '老夫妇-昌二（亡子）': {
+                    positive: ['思念', '回忆', '理想化', '永恒'],
+                    negative: ['缺席', '死亡'],
+                    explanation: '对亡子的记忆成为情感寄托，现实中的缺席反而维持了完美形象'
+                }
+            };
+
+            const option = {
+                title: {
+                    text: '《东京物语》家庭关系情感深度分析',
+                    subtext: '基于剧本关键词提取的情感温度解析',
+                    left: 'center',
+                    textStyle: { fontSize: 18, fontWeight: 'bold' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    padding: 12,
+                    textStyle: { fontSize: 11 },
+                    formatter: (params) => {
+                        const relation = params[0].name;
+                        const keywords = relationshipKeywords[relation];
+                        return `
+                            <strong>${relation}</strong><br/>
+                            ${params[0].marker} 情感温度：${params[0].value}<br/>
+                            ${params[1].marker} 连接强度：${params[1].value}<br/><br/>
+                            <strong>负面关键词：</strong>${keywords.negative.join('、')}<br/>
+                            <strong>正面关键词：</strong>${keywords.positive.join('、')}<br/><br/>
+                            <strong>原因分析：</strong>${keywords.explanation}
+                        `;
+                    }
+                },
+                legend: { data: ['情感温度', '连接强度'], top: 40 },
+                grid: { left: '3%', right: '4%', bottom: '30%', top: '15%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    data: Object.keys(relationshipKeywords),
+                    axisLabel: { interval: 0, rotate: 30, fontSize: 12 }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '关系强度指数',
+                    min: 0,
+                    max: 10,
+                    axisLine: { show: true },
+                    splitLine: { show: true, opacity: 0.3 }
+                },
+                series: [
+                    {
+                        name: '情感温度',
+                        type: 'line',
+                        data: [3.5, 4.5, 5.5, 4, 9, 10],
+                        lineStyle: { color: '#e74c3c', width: 3 },
+                        itemStyle: { color: '#e74c3c' },
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        smooth: true,
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: '最高情感', symbolSize: 20, itemStyle: { color: '#c0392b' } },
+                                { type: 'min', name: '最低情感', symbolSize: 20, itemStyle: { color: '#95a5a6' } }
+                            ]
+                        }
+                    },
+                    {
+                        name: '连接强度',
+                        type: 'bar',
+                        data: [3.5, 3, 4, 3.5, 8, 10],
+                        itemStyle: { color: '#3498db', opacity: 0.7 },
+                        barWidth: '40%',
+                        markLine: {
+                            data: [{ type: 'average', name: '平均连接强度' }],
+                            lineStyle: { color: '#2980b9', width: 2 }
+                        }
+                    }
+                ],
+                // 底部关键词展示区（优化响应式布局）
+                graphic: [
+                    {
+                        type: 'group',
+                        left: '50%',
+                        top: '82%',
+                        style: { transform: 'translateX(-50%)' },
+                        children: [
+                            {
+                                type: 'rect',
+                                shape: { width: '95%', height: 90 },
+                                style: { fill: '#f8f9fa', stroke: '#e9ecef', lineWidth: 1 }
+                            },
+                            {
+                                type: 'text',
+                                left: 10,
+                                top: 20,
+                                style: { text: '关系关键词解析（基于剧本分析）:', fontSize: 14, fontWeight: 'bold', fill: '#2c3e50' }
+                            }
+                        ]
+                    },
+                    // 动态生成关键词标签（适配不同屏幕宽度）
+                    ...Object.keys(relationshipKeywords).map((relation, index) => {
+                        const keywords = relationshipKeywords[relation];
+                        const totalRelations = Object.keys(relationshipKeywords).length;
+                        const widthPerRelation = 900 / totalRelations; // 平均分配宽度
+                        const xPos = -450 + (index + 0.5) * widthPerRelation; // 居中对齐
+
+                        return {
+                            type: 'group',
+                            left: xPos,
+                            top: '88%',
+                            style: { transform: 'translateX(-50%)' },
+                            children: [
+                                {
+                                    type: 'text',
+                                    style: { text: relation, fontSize: 10, fontWeight: 'bold', fill: '#3498db', textAlign: 'center' }
+                                },
+                                {
+                                    type: 'text',
+                                    top: 15,
+                                    style: { text: `负面: ${keywords.negative.slice(0, 2).join('、')}`, fontSize: 9, fill: '#e74c3c', textAlign: 'center' }
+                                },
+                                {
+                                    type: 'text',
+                                    top: 28,
+                                    style: { text: `正面: ${keywords.positive.slice(0, 2).join('、')}`, fontSize: 9, fill: '#27ae60', textAlign: 'center' }
+                                }
+                            ]
+                        };
+                    })
+                ]
+            };
+
+            myChart.setOption(option);
+            window.addEventListener('resize', () => myChart.resize());
+        };
+
+        window.addEventListener('load', initChart);
+    </script>
+</body>
+</html>

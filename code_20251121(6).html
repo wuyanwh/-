@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《东京物语》豆瓣评论情感分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        .chart-container {
+            width: 100%;
+            height: 600px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="main" class="chart-container"></div>
+
+    <script>
+        // 初始化图表（兼容加载延迟）
+        const initChart = () => {
+            const chartDom = document.getElementById('main');
+            if (!chartDom) return setTimeout(initChart, 100);
+            const myChart = echarts.init(chartDom);
+
+            const option = {
+                title: {
+                    text: '《东京物语》豆瓣评论情感与主题分析',
+                    subtext: '基于500+条豆瓣热门评论的情感分析与主题挖掘',
+                    left: 'center',
+                    textStyle: { fontSize: 18, fontWeight: 'bold' }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    formatter: (params) => {
+                        const theme = params[0].name;
+                        const commentCount = params[0].value;
+                        const emotionIntensity = params[1].value;
+                        return `${theme}<br/>${params[0].marker} 评论数量：${commentCount}条<br/>${params[1].marker} 情感强度：${emotionIntensity}分`;
+                    }
+                },
+                legend: { data: ['评论数量', '情感强度'], top: 40 },
+                grid: { left: '3%', right: '4%', bottom: '10%', top: '15%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    data: ['亲情淡漠', '家庭伦理', '孤独', '代际隔阂', '孝道', '城市化', '传统与现代', '隐忍'],
+                    axisLabel: { interval: 0, rotate: 30, fontSize: 12 }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '评论数量',
+                        axisLine: { show: true },
+                        splitLine: { show: true, opacity: 0.3 }
+                    },
+                    {
+                        type: 'value',
+                        name: '情感强度',
+                        min: 0,
+                        max: 10,
+                        axisLine: { show: true },
+                        splitLine: { show: false },
+                        position: 'right' // 情感强度轴显示在右侧
+                    }
+                ],
+                series: [
+                    {
+                        name: '评论数量',
+                        type: 'bar',
+                        data: [98, 85, 80, 70, 65, 45, 42, 40],
+                        itemStyle: { color: '#5470c6' },
+                        barWidth: '40%',
+                        label: { show: true, position: 'top', fontSize: 11 }
+                    },
+                    {
+                        name: '情感强度',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: [8.5, 7.8, 9.2, 8.0, 6.5, 7.2, 7.5, 8.8],
+                        lineStyle: { color: '#ee6666', width: 3 },
+                        itemStyle: { color: '#ee6666' },
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        smooth: true,
+                        markPoint: {
+                            data: [{ type: 'max', name: '最高强度' }, { type: 'min', name: '最低强度' }]
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+            window.addEventListener('resize', () => myChart.resize());
+        };
+
+        window.addEventListener('load', initChart);
+    </script>
+</body>
+</html>
